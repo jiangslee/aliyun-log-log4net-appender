@@ -1,84 +1,154 @@
-# Loghub Log4j Appender
+# Aliyun.LOGSDK.log4net Appender
+- NuGet：[![Aliyun.LOGSDK.log4net][1.1]][1.2]
 
-Log4j 是 Apache 的一个开放源代码项目，通过使用 Log4j，您可以控制日志信息输送的目的地是控制台、文件、GUI 组件、甚至是套接口服务器、NT 的事件记录器、UNIX Syslog 守护进程等；您也可以控制每一条日志的输出格式；通过定义每一条日志信息的级别，您能够更加细致地控制日志的生成过程。最令人感兴趣的就是，这些可以通过一个配置文件来灵活地进行配置，而不需要修改应用的代码。
+[1.1]: https://buildstats.info/nuget/Aliyun.LOGSDK.log4net
+[1.2]: https://www.nuget.org/packages/Aliyun.LOGSDK.log4net
 
-Log4j 由三个重要的组件构成：日志信息的优先级，日志信息的输出目的地，日志信息的输出格式。日志信息的优先级从高到低有 ERROR、WARN、INFO、DEBUG，分别用来指定这条日志信息的重要程度；日志信息的输出目的地指定了日志将打印到控制台还是文件中；而输出格式则控制了日志信息的显示内容。
+使用 Aliyun.LOGSDK.log4net Appender，您可以控制日志的输出目的地为阿里云日志服务，有一点需要特别注意，Aliyun.LOGSDK.log4net Appender 不支持设置日志的输出格式。
 
-使用 Loghub Log4j Appender，您可以控制日志的输出目的地为阿里云日志服务，有一点需要特别注意，Loghub Log4j Appender 不支持设置日志的输出格式，写到日志服务中的日志的样式如下：
-```
-level:ERROR
-location:test.TestLog4jAppender.main(TestLog4jAppender.java:18)
-message:test log4j appender
-thread:main
-time:2016-05-27T03:15+0000
-```
-其中：
-
-level 是日志级别。
-location 是日志打印语句的代码位置。
-message 是日志内容。
-thread 是线程名称。
-time 是日志打印时间。
-# Loghub Log4j Appender 的优势
+# Aliyun.LOGSDK.log4net Appender 的优势
 
 客户端日志不落盘：即数据生产后直接通过网络发往服务端。
-对于已经使用 log4j 记录日志的应用，只需要简单修改配置文件就可以将日志传输到日志服务。
-异步高吞吐，Loghub Log4j Appender 会将用户的日志 merge 之后异步发送，提高网络 IO 效率。
+对于已经使用 log4net 记录日志的应用，只需要简单修改配置文件就可以将日志传输到日志服务。
+
 # 使用方法
 
-Step 1： maven 工程中引入依赖。
+Step 1： 站点或服务工程中引入依赖。
 ```
-<dependency>
-    <groupId>com.aliyun.openservices</groupId>
-    <artifactId>log-loghub-log4j-appender</artifactId>
-    <version>0.1.3</version>
-</dependency>
+Install-Package Aliyun.LOGSDK.log4net
 ```
-Step 2: 修改 log4j.properties 文件（不存在则在项目根目录创建），配置根 Logger，其语法为：
 
-log4j.rootLogger = [level] , appenderName1, appenderName2, …
-其中：
+Step 2: 配置 log4net.config 文件（不存在则在项目根目录创建），示例配置文件：
+```
+<?xml version="1.0"?>
+<configuration>
+  <configSections>
+    <section name="log4net" type="log4net.Config.Log4NetConfigurationSectionHandler, log4net"/>
+  </configSections>
+  <log4net>
+    <!-- Define some output appenders -->
+    <!--定义推送到阿里云日志服务中-->
+    <appender name="AliyunLogAppender" type="Aliyun.LOGSDK.log4net.AliyunLogAppender, Aliyun.LOGSDK.log4net">
+      <!--此处可为空，为空时，从应用程序配置的 AppSettings 节点获取配置项值，其配置 Key 前缀为【AliyunLOG_】-->
+      <!--创建 project 所属区域匹配的日志服务 Endpoint，必填参数-->
+      <Endpoint value="" />
+      <!--阿里云访问秘钥 AccessKeyId，必填参数-->
+      <AccessKeyId value="" />
+      <!--阿里云访问秘钥 AccessKeySecret，必填参数-->
+      <AccessKeySecret value="" />
+      <!--日志服务的 project 名，必填参数-->
+      <Project value="" />
+      <!--日志服务的 logstore 名，必填参数-->
+      <Logstore value="" />
+      <!--日志主题，必填参数-->
+      <Topic value="" />
+      <!--日志来源，选填参数-->
+      <Source value="" />
+      <filter type="log4net.Filter.LevelRangeFilter">
+        <param name="LevelMin" value="ALL" />
+      </filter>
+    </appender>
 
-level 是日志记录的优先级，优先级从高到低分别是 ERROR、WARN、INFO、DEBUG。通过在这里定义的级别，您可以控制应用程序中相应级别的日志信息的开关。比如在这里定义了 INFO 级别，则应用程序中所有 DEBUG 级别的日志信息将不被打印出来。
-appenderName 指定日志信息输出到哪个地方。您可以同时指定多个输出目的地，这里的每个 appender 会对应到具体某一种 appender 类型，每种 appender 都会提供一些配置参数。
-使用 loghub appender 的配置如下：
+    <!--定义日志的输出媒介，下面定义日志以五种方式输出。也可以下面的按照一种类型或其他类型输出。-->
+    <root>
+      <!--control log level: ALL|DEBUG|INFO|WARN|ERROR|FATAL|OFF-->
+      <!--如果没有定义LEVEL的值，则缺省为DEBUG-->
+      <level value="ALL"/>
+      <!--文件形式记录日志-->
+      <appender-ref ref="AllAppender"/>
+      <!--控制台显示日志-->
+      <appender-ref ref="ConsoleAppender"/>
+      <!--日志推送到阿里云日志服务，level: ALL-->
+      <appender-ref ref="AliyunLogAppender"/>
+    </root>
+  </log4net>
+</configuration>
 ```
-log4j.rootLogger=WARN,loghub
-log4j.appender.loghub = com.aliyun.openservices.log.log4j.LoghubAppender
-log4j.appender.loghub.projectName = [you project]
-log4j.appender.loghub.logstore = [you logstore]
-log4j.appender.loghub.endpoint = [your project endpoint]
-log4j.appender.loghub.accessKeyId = [your accesskey id]
-log4j.appender.loghub.accessKey = [your accesskey]
-```
-配置中中括号内的部分是需要填写的，具体含义见下面的说明。
 
-# 配置参数
+文件 AssemblyInfo.cs 最后添加一行，配置 log4net
+```
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config", Watch = true)]
+```
 
-Loghub Log4j Appender 可供配置的参数如下，其中注释为必选参数的是必须填写的，可选参数在不填写的情况下，使用默认值。
+也可在 App.config 或 Web.config 配置，当 log4net.config 中配置值为空时，配置项起效。
 ```
-#日志服务的 project 名，必选参数
-log4j.appender.loghub.projectName = [you project]
-#日志服务的 logstore 名，必选参数
-log4j.appender.loghub.logstore = [you logstore]
-#日志服务的 HTTP 地址，必选参数
-log4j.appender.loghub.endpoint = [your project endpoint]
-#用户身份标识，必选参数
-log4j.appender.loghub.accessKeyId = [your accesskey id]
-log4j.appender.loghub.accessKey = [your accesskey]
-#当使用临时身份时必须填写，非临时身份则删掉这行配置
-log4j.appender.loghub.stsToken=[your ststoken]
-#被缓存起来的日志的发送超时时间，如果缓存超时，则会被立即发送，单位是毫秒，可选参数
-log4j.appender.loghub.packageTimeoutInMS=3000
-#每个缓存的日志包中包含日志数量的最大值，不能超过 4096，可选参数
-log4j.appender.loghub.logsCountPerPackage=4096
-#每个缓存的日志包的大小的上限，不能超过 5MB，单位是字节，可选参数
-log4j.appender.loghub.logsBytesPerPackage = 5242880
-#Appender 实例可以使用的内存的上限，单位是字节，默认是 100MB，可选参数
-log4j.appender.loghub.memPoolSizeInByte=1048576000
-#后台用于发送日志包的 IO 线程的数量，默认值是 1，可选参数
-log4j.appender.loghub.ioThreadsCount=1
-# 输出到日志服务的时间格式，使用 Java 中 SimpleDateFormat 格式化时间，默认是 ISO8601，可选参数
-log4j.appender.loghub.timeFormat=yyyy-MM-dd'T'HH:mmZ
-log4j.appender.loghub.timeZone=UTC
+  <appSettings>
+    <!--阿里云日志服务配置项，当 log4net.config 中配置值为空时，配置项起效-->
+    <!--创建 project 所属区域匹配的日志服务 Endpoint，必填参数-->
+    <add key="AliyunLOG_Endpoint" value="cn-beijing.log.aliyuncs.com"/>
+    <!--阿里云访问秘钥 AccessKeyId，必填参数-->
+    <add key="AliyunLOG_AccessKeyId" value="AccessKeyId"/>
+    <!--阿里云访问秘钥 AccessKeySecret，必填参数-->
+    <add key="AliyunLOG_AccessKeySecret" value="AccessKeySecret"/>
+    <!--日志服务的 project 名，必填参数-->
+    <add key="AliyunLOG_Project" value="Project"/>
+    <!--日志服务的 logstore 名，必填参数-->
+    <add key="AliyunLOG_Logstore" value="Logstore"/>
+    <!--日志主题，必填参数-->
+    <add key="AliyunLOG_Topic" value="Topic"/>
+    <!--日志来源，选填参数-->
+    <add key="AliyunLOG_Source" value="Source"/>
+  </appSettings>
+
 ```
+
+Step 3: 调用示例
+```
+_logger.Debug("测试Debug级别");
+
+_logger.Info("测试Info级别");
+
+_logger.Error("测试Error级别");
+
+try
+{
+    throw new Exception("系统异常");
+}
+catch (Exception ex)
+{
+    _logger.Error("测试Error级别", ex);
+}
+
+_logger.Debug(new { Message = "测试匿名对象", Propa = "属性a", prop1 = 1, GuidProp = Guid.NewGuid(), DateTimeProp = DateTime.Now});
+
+_logger.Info(new { Message = "测试匿名对象", Propa = "属性a", prop1 = 1, GuidProp = Guid.NewGuid(), DateTimeProp = DateTime.Now});
+
+_logger.Error(new { Message = "测试匿名对象", Propa = "属性a", prop1 = 1, GuidProp = Guid.NewGuid(), DateTimeProp = DateTime.Now });
+
+try
+{
+    throw new Exception("系统异常");
+}
+catch (Exception ex)
+{
+    _logger.Error(new { Message = "测试匿名对象", Propa = "属性a", prop1 = 1, GuidProp = Guid.NewGuid(), DateTimeProp = DateTime.Now }, ex);
+}
+```
+
+写到日志服务中的日志的样式如下：
+```
+__topic__: 日志主题  
+__source__: 日志来源
+__Time__: 2017-09-27 16:57:14:002  
+__Level__: ERROR
+__Logger__: Demo.Program
+__Class__: Demo.Program
+__Method__: Main
+__File__: C:\GitRepos\aliyun-log-log4net-appender\Demo\Program.cs
+__Line__: 48
+__Thread__: 1
+__Message__: 测试匿名对象
+__Exception__:
+ System.Exception: 系统异常
+   在 Demo.Program.Main(String[] args) 位置 C:\GitRepos\aliyun-log-log4net-appender\Demo\Program.cs:行号 48
+__ExceptionMessage__: 系统异常
+__ExceptionType__: System.Exception
+
+Propa: 属性a
+prop1: 1
+GuidProp: 5291f321-30ca-4290-b305-01f8d662e9a7
+DateTimeProp: 2017/9/27 16:57:14
+```
+
+# Loghub Log4j Appender
+- [Loghub Log4j Appender](https://github.com/aliyun/aliyun-log-log4j-appender)

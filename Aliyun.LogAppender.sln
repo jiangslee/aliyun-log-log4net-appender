@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.15
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aliyun.LOGSDK.log4net", "Aliyun.LOGSDK.log4net\Aliyun.LOGSDK.log4net.csproj", "{BAD54C3B-FDAA-442B-9723-8D4ACD2A433C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Demo", "Demo\Demo.csproj", "{C8EB10D8-EFFE-4396-BD39-4639C4FDA968}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A235006F-3CB9-4C7C-AAA2-41B655251535}"
+	ProjectSection(SolutionItems) = preProject
+		Aliyun.LOGSDK.log4net.nuspec = Aliyun.LOGSDK.log4net.nuspec
+		buildPackage.cmd = buildPackage.cmd
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAD54C3B-FDAA-442B-9723-8D4ACD2A433C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAD54C3B-FDAA-442B-9723-8D4ACD2A433C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAD54C3B-FDAA-442B-9723-8D4ACD2A433C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAD54C3B-FDAA-442B-9723-8D4ACD2A433C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8EB10D8-EFFE-4396-BD39-4639C4FDA968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8EB10D8-EFFE-4396-BD39-4639C4FDA968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8EB10D8-EFFE-4396-BD39-4639C4FDA968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8EB10D8-EFFE-4396-BD39-4639C4FDA968}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABC9999B-A096-42C4-8DF2-E19E4D9F2991}
+	EndGlobalSection
+EndGlobal

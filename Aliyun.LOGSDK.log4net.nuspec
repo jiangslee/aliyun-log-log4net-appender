@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata schemaVersion="2">
+    <id>Aliyun.LOGSDK.log4net</id>
+    <version>1.0.0</version>
+    <title>Aliyun.LOGSDK.log4net</title>
+    <authors>arbing</authors>
+    <owners>arbing</owners>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <projectUrl>https://github.com/arbing/aliyun-log-log4net-appender</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>阿里云日志服务 log4net Appender</description>
+    <summary>阿里云日志服务 log4net Appender</summary>
+    <releaseNotes>
+    </releaseNotes>
+    <tags>Aliyun LOG SDK log4net Appender</tags>
+    <dependencies>
+      <dependency id="log4net" version="1.2.10" />
+      <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="Aliyun.LOGSDK" version="0.0.6" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System"/>
+      <frameworkAssembly assemblyName="System.Core"/>
+      <frameworkAssembly assemblyName="System.Data"/>
+      <frameworkAssembly assemblyName="System.Xml"/>
+      <frameworkAssembly assemblyName="System.Configuration"/>
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="Aliyun.LOGSDK.log4net\bin\Release\Aliyun.LOGSDK.log4net.dll" target="lib\net40" />
+    <file src="Aliyun.LOGSDK.log4net\bin\Release\Aliyun.LOGSDK.log4net.pdb" target="lib\net40" />
+    <file src="Aliyun.LOGSDK.log4net\bin\Release\Aliyun.LOGSDK.log4net.xml" target="lib\net40" />
+  </files>
+</package>
