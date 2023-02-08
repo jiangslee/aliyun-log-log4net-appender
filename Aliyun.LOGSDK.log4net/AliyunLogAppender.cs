@@ -98,11 +98,11 @@ namespace Aliyun.LOGSDK.log4net
 
                 _client = new LogClient(Endpoint, AccessKeyId, AccessKeySecret);
 
-                LogLog.Debug("AliyunLogAppender 初始化完成");
+                LogLog.Debug(this.GetType(), "AliyunLogAppender 初始化完成");
             }
             catch (Exception ex)
             {
-                LogLog.Warn("AliyunLogAppender 初始化异常：" + ex.Message);
+                LogLog.Warn(this.GetType(), "AliyunLogAppender 初始化异常：" + ex.Message);
             }
         }
 
@@ -158,7 +158,7 @@ namespace Aliyun.LOGSDK.log4net
             }
             catch (Exception ex)
             {
-                LogLog.Debug("推送日志到阿里云异常：" + ex.Message);
+                LogLog.Debug(this.GetType(), "推送日志到阿里云异常：" + ex.Message);
             }
         }
 
